@@ -57,8 +57,8 @@ module.exports.getHotelReview = async (req, res, next) => {
 };
 module.exports.getFlights = async (req, res, next) => {
   try {
-    const { src, des, date, range } = req.query;
-    if (src === "DEL" && des === "BOM") {
+    if (true) {
+      console.log("i");
       const json = fs.readFileSync(
         path.join(__dirname, "flight.json"),
         "utf-8"
@@ -66,6 +66,7 @@ module.exports.getFlights = async (req, res, next) => {
       const data = JSON.parse(json);
       return res.json(data);
     }
+    const { src, des, date, range } = req.query;
     const headers = req.headers;
     const url = `https://test.api.amadeus.com/v1/shopping/flight-dates?origin=${src}&destination=${des}&departureDate=${date},${range}&oneWay=true&nonStop=false&viewBy=DATE`;
     const flights = await getFromAxios(url, headers);

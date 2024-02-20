@@ -13,7 +13,6 @@ export default function Home() {
         navigate('/auth')
     };
   },[navigate]);
-
   const [messages, setMessages] = useState(false);
   const [menu, setMenu] = useState("Profile");
   const [feed,setFeed] = useState("home")
@@ -21,7 +20,7 @@ export default function Home() {
     setMenu(menu);
   };
   return (
-    <Container messages={messages}>
+    <Container messages={messages} style={{gridTemplateColumns: messages ? '30% 70%': '20% 80%'}}>
       <Account setMessages={setMessages} changeMenu={changeMenu} menu={menu} setFeed={setFeed}/>
       <Feed feed={feed} setFeed={setFeed}/>
     </Container>

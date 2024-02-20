@@ -76,6 +76,8 @@ export default function Hotel() {
 const Container = styled.div`
   height: 100%;
   width: 100%;
+  border-right: #ffffff 4px;
+  border-radius: 3rem;
   .search {
     border-radius: 0.5rem;
     background-color: #373842;

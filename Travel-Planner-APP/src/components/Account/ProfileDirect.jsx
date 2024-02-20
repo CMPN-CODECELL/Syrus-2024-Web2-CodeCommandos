@@ -10,7 +10,7 @@ import Back from "./Back";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { addFriendRoute, addRequestRoute, getUsers } from "../../utils/api-routes";
-export default function ({ changeMenu, setMessages, inPosts }) {
+export default function ({ changeMenu,setMessages}) {
   const [users,setUsers] = useState([])
   const user = JSON.parse(localStorage.getItem('user'))
   useEffect(()=>{
@@ -27,85 +27,27 @@ export default function ({ changeMenu, setMessages, inPosts }) {
     friends()
   },[])
 
-  const addFriend = async (id)=>{
-    try {
-      const {data} = await axios.post(addRequestRoute,{from: user.user._id,to: id},{headers:{
-        Authorization: user.token
-      }})
-      toast.done(data,toastOptions)
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-  const [text, setText] = useState("");
-  const toastOptions = {
-    position: "bottom-right",
-    autoClose: 8000,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "dark",
-  };
   return (
     <>
-    <Container style={{gridTemplateRows: `${!inPosts ? '5% 17% 3% 75%' : '5% 3% 92%'}`}}>
+    <Container>
       <div className="top-bar">
         <div className="back">
-          <Back changeMenu={changeMenu} inPosts={inPosts}/>
-        </div>
-        <div className="search">
-          <Search className="icon" />
-          <input
-            type="text"
-            placeholder="Search"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
+          <Back changeMenu={changeMenu} />
         </div>
       </div>
-      <h4>Friends</h4>
+      <h4>Trips</h4>
       <div className="users">
         {users.map((item,index) => (
           <div key={index}
             className="user"
+            onClick={() => {
+              changeMenu("Messages");
+              setMessages(true);
+            }}
           >
             <img src={Logo} alt="userphoto" key={index}/>
             <div className="details" key={index}>
               <h4>{item.name}</h4>
-              <Button onClick={()=>addFriend(item._id)}>
-                <Add />
-              </Button>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="top-bar">
-        <div className="search">
-          <Search className="icon" />
-          <input
-            type="text"
-            placeholder="Search"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
-        </div>
-      </div>
-      <h4>Friend Requests</h4>
-      <div className="users">
-        {users.map(() => (
-          <div
-            className="user"
-          >
-            <img src={Logo} alt="userphoto" />
-            <div className="details">
-              <h4>name</h4>
-              <div className="buttons">
-              <Button>
-                <Accept/>
-              </Button>
-              <Button>
-                <Reject/>
-              </Button>
-              </div>
             </div>
           </div>
         ))}

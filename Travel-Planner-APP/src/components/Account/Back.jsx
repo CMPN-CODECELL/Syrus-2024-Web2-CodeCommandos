@@ -5,7 +5,7 @@ export default function Back({ changeMenu, setMessages = null, setSearchWhat= nu
   return (
     <Button
       onClick={() => {
-        changeMenu(setMessages?`${inPosts ? 'Profile': 'Direct'}`:"Profile");
+        changeMenu("Profile");
         if(setMessages){
           setMessages(false)
         }
