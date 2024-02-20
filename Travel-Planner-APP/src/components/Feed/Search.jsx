@@ -7,7 +7,6 @@ export default function Search() {
   return <Container>
     <Hotel/>
     <Flight/>
-    <Activity/>
   </Container>;
 }
 const Container = styled.div`

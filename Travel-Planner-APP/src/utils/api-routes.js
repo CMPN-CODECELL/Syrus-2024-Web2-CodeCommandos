@@ -9,3 +9,5 @@ export const addRequestRoute = `${host}/api/auth/addRequest`
 export const getDestinRoute = `${host}/get/amadeus/getDest`
 export const ticketUpload = `${host}/trip/addTrip`
 export const getTrip = `${host}/trip/getTrip`
+export const getHotelRoute = `${host}/get/amadeus/getHotels`
+export const getFightRoute = `${host}/get/amadeus/getFlights`

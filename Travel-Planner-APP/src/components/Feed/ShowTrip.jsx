@@ -1,8 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import Posts from "./Posts";
 import axios from "axios";
-import TripDetail from "./TripDetail";
 import { getTrip } from "../../utils/api-routes";
 export default function ShowTrip({ setAddShowTrip }) {
   const user = JSON.parse(localStorage.getItem('user'))
