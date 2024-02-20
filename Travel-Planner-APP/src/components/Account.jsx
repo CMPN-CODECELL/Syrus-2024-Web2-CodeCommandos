@@ -6,7 +6,7 @@ import ProfileDirect from "./Account/ProfileDirect";
 import ProfileSettings from "./Account/ProfileSettings";
 import Messages from "./Account/Messages";
 import EditProfile from "./Account/EditProfile";
-export default function Account({ setMessages,changeMenu,menu,setFeed}) {
+export default function Account({ messages,setMessages,changeMenu,menu,setFeed}) {
   const navigate = useNavigate()
   useEffect(()=>{
     const user = JSON.parse(localStorage.getItem('user'))
@@ -35,7 +35,7 @@ export default function Account({ setMessages,changeMenu,menu,setFeed}) {
     case "Messages":
       return (
         <Container>
-          <Messages changeMenu={changeMenu}/>
+          <Messages changeMenu={changeMenu} messages={messages}/>
         </Container>
       );
     case "Edit Profile":

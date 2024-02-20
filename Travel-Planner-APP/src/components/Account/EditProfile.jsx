@@ -5,6 +5,8 @@ import { ToastContainer, toast } from "react-toastify";
 import { FaUpload as Upload } from "react-icons/fa";
 import Back from "./Back";
 import { isEqual } from "lodash";
+import axios from "axios";
+import { updateRoute } from "../../utils/api-routes";
 export default function EditProfile({ changeMenu, user }) {
   const [visible, setIsVisible] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -50,7 +52,21 @@ export default function EditProfile({ changeMenu, user }) {
     if (isEqual(texts, user) && !edited) {
       toast.error("Edit any field to save changes", toastOptions);
     }
+    else{
+      console.log(";jhghg");
+      updateProfile()
+    }
   };
+  const updateProfile = async()=>{
+    const user = JSON.parse(localStorage.getItem('user'))
+    try {
+      const {data} = await axios.get(updateRoute,{headers:{
+        Authorization: user.token
+      }})
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
   return (
     <>
       <Container visible={visible}>

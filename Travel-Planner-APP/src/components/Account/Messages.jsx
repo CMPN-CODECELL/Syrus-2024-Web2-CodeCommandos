@@ -2,14 +2,65 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+import { io } from "socket.io-client";
 import Back from "./Back";
 import Logo from "../../assets/logo.png";
 import DM from "./DM";
-export default function Messages({changeMenu,setMessages}) {
-  const [messages, setMessage] = useState([]);
+import { addMsgRoute, getMsgRoute } from "../../utils/api-routes";
+
+export default function Messages({ changeMenu, setMessages, messages }) {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const [boolean, item] = messages;
+  const [arrivalMessage, setArrivalMessage] = useState([]);
+
+  const socket = useRef(null);
+
+  useEffect(() => {
+    socket.current = io("http://localhost:5000"); // Adjust the URL according to your server
+
+    socket.current.on('chat message', (message) => {
+      setArrivalMessage((prevMessages) => [...prevMessages, message]);
+    });
+
+    return () => {
+      socket.current.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    async function getMsg() {
+      try {
+        const { data } = await axios.post(getMsgRoute, { trip: item._id }, {
+          headers: {
+            Authorization: user.token,
+          },
+        });
+        setArrivalMessage(data);
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+    getMsg();
+  }, []);
+
+  const addMsg = (msg) => {
+    try {
+      socket.current.emit('chat message', msg);
+
+      setArrivalMessage((prevMessages) => [...prevMessages, { message: msg, fromSelf: true }]);
+
+      axios.post(addMsgRoute, { msg, trip: item._id }, {
+        headers: {
+          Authorization: user.token,
+        },
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const { tripMates } = item;
   const scrollRef = useRef();
-  const [arrivalMessage, setArrivalMessage] = useState(null);
-  const arr = [1, 1];
   return (
     <Container>
       <div className="chat-header">
@@ -21,19 +72,21 @@ export default function Messages({changeMenu,setMessages}) {
             <img src={Logo} alt="" />
           </div>
           <div className="username">
-            <h3>username</h3>
+            <h3>{`Trip: ${item._id}`}</h3>
           </div>
         </div>
       </div>
       <div className="chat-messages">
-        {arr.map((message) => {
+        {
+        arrivalMessage.map((message) => {
+          console.log(arrivalMessage);
           return (
             <div ref={scrollRef} key={uuidv4()}>
               <div
-                className={`message ${message == 1 ? "sended" : "recieved"}`}
+                className={`message ${message.fromSelf ? "sended" : "recieved"}`}
               >
                 <div className="content ">
-                  <p>{message}</p>
+                  <p>{message.message}</p>
                 </div>
               </div>
             </div>
@@ -41,7 +94,7 @@ export default function Messages({changeMenu,setMessages}) {
         })}
       </div>
       <div className="dm">
-        <DM />
+        <DM addMsg={addMsg}/>
       </div>
     </Container>
   );
@@ -113,7 +166,7 @@ const Container = styled.div`
       }
     }
     .sended {
-      justify-content: flex-end;
+      justify-content: end;
       .content {
         background-color: #4f04ff21;
       }

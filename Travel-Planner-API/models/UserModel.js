@@ -39,11 +39,7 @@ const userSchema = mongoose.Schema({
         type: [tripSchema],
         default: []
     },
-    friends : {
-        type: [mongoose.Types.ObjectId],
-        default: []
-    },
-    friendsRequest : {
+    tripRequest : {
         type: [mongoose.Types.ObjectId],
         default: []
     }

@@ -1,33 +1,59 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { getTrip } from "../../utils/api-routes";
+import { Link } from "react-router-dom";
 export default function ShowTrip({ setAddShowTrip }) {
-  const user = JSON.parse(localStorage.getItem('user'))
-  useEffect(()=>{
-    async function getTrips(){
+  const [trips,setTrips] = useState([])
+  const user = JSON.parse(localStorage.getItem("user"));
+  useEffect(() => {
+    async function getTrips() {
       try {
-        const{data} = await axios.get(getTrip,{headers:{
-          Authorization: user.token
-        }})
+        const { data } = await axios.get(getTrip, {
+          headers: {
+            Authorization: user.token,
+          },
+        });
+        setTrips(data)
         console.log(data);
       } catch (error) {
         console.log(error.message);
       }
     }
-    getTrips()
-  },[])
+    getTrips();
+  }, []);
+  const handleAIButtonClick = () => {
+    // Redirect to the AI link
+    window.location.href = "https://travel-email-sender-7qklh6qvjevt2nkysgs7rj.streamlit.app/";
+  };
   return (
     <Container>
       <div className="row">
         <div className="mytrips">
-       
+          {
+            trips && 
+            trips.map((item)=>(
+              <div className={`${item ? 'trip' : 'notrip'}`}>
+                <h4>{item.departureDate}</h4>
+                <h4>{item.returnDate}</h4>
+                <h4>{item.arrivalCity}</h4>
+                <img src={`http://localhost:5000${item.ticket}`} alt="" />
+                {
+                  item.tripMates.map((item)=>(
+                    <h4>{item}</h4>
+                  ))
+                }
+              </div>
+            ))
+          }
         </div>
-        <div className="myposts">
-          
-        </div>
+        <div className="myposts"></div>
       </div>
-      <FloatingActionButton2>AI</FloatingActionButton2>
+      <FloatingActionButton2
+        onClick={handleAIButtonClick}
+      >
+        AI
+      </FloatingActionButton2>
       <FloatingActionButton onClick={() => setAddShowTrip("add")}>
         +
       </FloatingActionButton>
@@ -37,24 +63,35 @@ export default function ShowTrip({ setAddShowTrip }) {
 const Container = styled.div`
   height: 100%;
   width: 100%;
-  .row{
+  .row {
     height: 100%;
     display: grid;
     grid-template-columns: 50% 50%;
-    .mytrips{
-      flex: 1;
+    .mytrips {
       height: 100%;
       width: 100%;
+      .trip{
+        background-color: #282a34;
+        border-radius: 2rem;
+        padding: 1rem;
+        h4{
+          color: white;
+        }
+
+      }
+      .notrip{
+        display: none;
+      }
     }
-    .myposts{
+    .myposts {
       height: 100%;
       width: 100%;
       overflow: auto;
       &-thumb {
-      background-color: #ffffff39;
-      width: 0.1rem;
-      border-radius: 1rem;
-    }
+        background-color: #ffffff39;
+        width: 0.1rem;
+        border-radius: 1rem;
+      }
     }
   }
 `;

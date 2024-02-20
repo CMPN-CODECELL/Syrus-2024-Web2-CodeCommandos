@@ -4,6 +4,10 @@ const tripSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    accepted: {
+        type: Boolean,
+        default: true
+    },
     returnDate : {
         type: String,
         required: true,
@@ -19,7 +23,7 @@ const tripSchema = mongoose.Schema({
     tripMates: {
         type : [mongoose.Types.ObjectId],
         default: []
-    }
+    },
 })
 const Trip = mongoose.model("Trips",tripSchema)
 module.exports = {Trip,tripSchema}

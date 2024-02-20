@@ -1,4 +1,4 @@
-const {addTrip, getTrip, getWeather, cancelTrip} = require('../controllers/TripController')
+const {addTrip, getTrip, getWeather, cancelTrip, acceptTrip, removeTrip} = require('../controllers/TripController')
 const {verifyToken} = require("../middlewares/UserMiddleware")
 const file = require('../middlewares/TripTicketUploadMiddleware')
 const router = require('express').Router()
@@ -6,4 +6,6 @@ router.post("/addTrip",verifyToken,file.single('image'),addTrip)
 router.get("/getTrip",verifyToken,getTrip)
 router.get("/getWeather",verifyToken,getWeather)
 router.get("/cancelTrip",verifyToken,cancelTrip)
+router.post("/acceptTrip",verifyToken,acceptTrip)
+router.post("/rejectTrip",verifyToken,removeTrip)
 module.exports = router

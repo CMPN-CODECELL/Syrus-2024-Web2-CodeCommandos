@@ -5,30 +5,40 @@ const { Trip } = require("../models/TripModel");
 const { log } = require("util");
 module.exports.addTrip = async (req, res, next) => {
   try {
-    const id = req.user.user;
-    const { departureDate, arrivalTime, returnDate, arrivalCity,tripMates } = req.body;
+    const userId = req.user.user;
+    const { departureDate, arrivalTime, returnDate, arrivalCity, tripMates } = req.body;
     const filename = req.file.filename;
     const imageUrl = `/data/tickets/${filename}`;
-    const mates = JSON.parse(tripMates)
-    const user = await User.findOne({ _id: id });
-    const obj = {
-      departureDate,departureTime: arrivalTime,returnDate,arrivalCity,tripMates: mates,ticket: imageUrl
-    }
-    console.log(obj);
-    let trip = new Trip(obj)
-    await trip.save()
-    user.trips.unshift(trip);
+    const mates = JSON.parse(tripMates);
+    const user = await User.findOne({ _id: userId });
+    const tripDetails = {
+      accepted: true,
+      departureDate,
+      departureTime: arrivalTime,
+      returnDate,
+      arrivalCity,
+      tripMates: mates,
+      ticket: imageUrl
+    };
+    await Trip.create(tripDetails); // Assuming mongoose model has a create method
+    await Promise.all(mates.map(async (item) => {
+      const friend = await User.findOne({ _id: item });
+      friend.trips.push({ ...tripDetails, accepted: false });
+      await friend.save();
+    }));
+    user.trips.push(tripDetails)
+    console.log(user);
     await user.save();
     return res.json({ msg: "Trip Added" });
   } catch (e) {
     if (req.file && req.file.filename) {
       try {
-        fs.unlink(`data/tickets/${req.file.filename}`,()=>console.log("File Deleted"));
+        fs.unlink(`data/tickets/${req.file.filename}`, () => console.log("File Deleted"));
       } catch (err) {
         console.error('Error deleting file:', err);
       }
     }
-    next(e)
+    next(e);
   }
 };
 module.exports.getTrip = async (req, res, next) => {
@@ -37,6 +47,7 @@ module.exports.getTrip = async (req, res, next) => {
     const id = req.user.user;
     const user = await User.findOne({ _id: id });
     const trips = user.trips;
+    console.log(trips);
     return res.json(trips);
   } catch (e) {
     next(e);
@@ -103,3 +114,37 @@ module.exports.getWeather = async (req, res, next) => {
     next(e);
   }
 }
+module.exports.acceptTrip = async (req,res,next)=>{
+  try {
+    const {user}  = req.user
+    
+    return res.json({msg:"Trip Added"})
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+module.exports.removeTrip = async (req, res, next) => {
+  try {
+    const { user} = req.user;
+    const userD = await User.findOne({ _id : user});
+    if (!userD) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+    const { trip } = req.body;
+    console.log(trip);
+    const index = userD.trips.findIndex((item) => trip === item._id.toString());
+    console.log(index);
+    if (index !== -1) {
+      userD.trips.splice(index, 1);
+      await userD.save();
+      console.log("hjjvb");
+      return res.json({ msg: "Trip Removed" });
+    } else {
+      return res.status(404).json({ msg: "Trip not found in user's trips" });
+    }
+  } catch (error) {
+    console.log(error.message);
+    next(error);
+  }
+};
+

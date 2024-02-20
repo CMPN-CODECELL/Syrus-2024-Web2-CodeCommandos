@@ -4,7 +4,7 @@ import { IoMdSend } from "react-icons/io";
 import styled from "styled-components";
 import Picker from "emoji-picker-react";
 
-export default function DM() {
+export default function DM({addMsg}) {
   const [msg, setMsg] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const handleEmojiPickerhideShow = () => {
@@ -18,8 +18,8 @@ export default function DM() {
   const sendChat = (event) => {
     event.preventDefault();
     if (msg.length > 0) {
-      //handleSendMsg(msg);
-      setMsg("");
+      addMsg(msg)
+      setMsg("")
     }
   };
 
