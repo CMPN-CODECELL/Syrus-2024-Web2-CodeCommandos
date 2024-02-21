@@ -20,7 +20,7 @@ export default function Home() {
     setMenu(menu);
   };
   return (
-    <Container messages={messages} style={{gridTemplateColumns: messages ? '30% 70%': '20% 80%'}}>
+    <Container messages={messages} style={{gridTemplateColumns: messages ? '20% 80%': '20% 80%'}}>
       <Account messages={messages} setMessages={setMessages} changeMenu={changeMenu} menu={menu} setFeed={setFeed}/>
       <Feed feed={feed} setFeed={setFeed}/>
     </Container>

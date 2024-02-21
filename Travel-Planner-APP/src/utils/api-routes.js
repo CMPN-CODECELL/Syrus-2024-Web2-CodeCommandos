@@ -15,3 +15,5 @@ export const getHotelRoute = `${host}/get/amadeus/getHotels`
 export const getFightRoute = `${host}/get/amadeus/getFlights`
 export const addMsgRoute = `${host}/api/msgs/addmsg`
 export const getMsgRoute = `${host}/api/msgs/getmsgs`
+export const addSuggRoute = `${host}/sugg/addSugg`
+export const getSuggRoute = `${host}/sugg/getSugg`

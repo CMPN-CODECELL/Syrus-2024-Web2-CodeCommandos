@@ -63,6 +63,7 @@ export default function EditProfile({ changeMenu, user }) {
       const {data} = await axios.get(updateRoute,{headers:{
         Authorization: user.token
       }})
+      console.log(data);
     } catch (error) {
       console.log(error.message)
     }

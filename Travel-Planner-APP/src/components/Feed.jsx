@@ -6,6 +6,7 @@ import { getDestinRoute } from "../utils/api-routes";
 import AddTrip from "./Feed/AddTrip";
 import ShowTrip from "./Feed/ShowTrip";
 import Search from "./Feed/Search";
+import AboutUs from "./Feed/AboutUs";
 export default function Feed({feed}) {
   const [data, setData] = useState([]);
   const [addShowTrip,setAddShowTrip] = useState("show")
@@ -57,7 +58,7 @@ export default function Feed({feed}) {
             <Search/>
           </Container>
         )
-  }
+        }
 }
 
 const Container = styled.div`
@@ -67,6 +68,7 @@ const Container = styled.div`
   border-radius: 3rem;
   align-items: center;
   padding: 2rem;
+  overflow: auto;
 `;
 
 const DestDetailsContainer = styled.div`

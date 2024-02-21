@@ -3,13 +3,15 @@ import styled from "styled-components";
 import { FaSearch as Search } from "react-icons/fa";
 import axios from "axios";
 import { getFightRoute } from "../../utils/api-routes";
-
+import flightimg from '../../assets/flight.gif'
 export default function Flight() {
+  const [isS,setisS] = useState(false)
   const [src, setSrc] = useState("");
   const [des, setDes] = useState("");
   const [flight, setFlight] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
  const handleClick = async()=>{
+  setisS(true)
       try {
         const { data } = await axios.get(getFightRoute, {
           headers: {
@@ -48,6 +50,8 @@ export default function Flight() {
           />
         </div>
       </div>
+      {
+        isS ? (
       <div className="flights">
         {flight.map((flight, index) => {
           return (
@@ -85,7 +89,11 @@ export default function Flight() {
             </div>
           );
         })}
-      </div>
+      </div>): (
+        <HotelGifContainer>
+          <img src={flightimg} alt="" />
+        </HotelGifContainer>
+      )}
     </Container>
   );
 }
@@ -169,5 +177,17 @@ const Card2 = styled.div`
 `;
 const CardTitle = styled.h3`
   color: #3875c9;
+`;
+const HotelGifContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  img{
+    align-self: center;
+    height: 80%;
+    width: 80%;
+  }
 `;
 

@@ -11,10 +11,6 @@ const locSchema = new mongoose.Schema({
 })
 const suggestSchema = mongoose.Schema(
   {
-    by: {
-      type: String,
-      required: true,
-    },
     tag : {
         type: String,
         required: true,
@@ -26,9 +22,8 @@ const suggestSchema = mongoose.Schema(
     loc : {
         type: locSchema
     },
-    votes : {
-      type : Number,
-      default : 0
+    feedback : {
+      type: String
     }
   },
   {

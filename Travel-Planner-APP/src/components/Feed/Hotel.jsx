@@ -2,20 +2,24 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaSearch as Search } from "react-icons/fa";
 import axios from "axios";
+import HotelGif from "../../assets/hotel.gif"; // Import the hotel GIF
 import { getHotelRoute } from "../../utils/api-routes";
+
 export default function Hotel() {
   const [text, setText] = useState("");
   const [hotel, setHotel] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
+  const [isS, setisS] = useState(false);
 
   const getHotel = async () => {
+    setisS(true)
     try {
       const data = await axios.get(getHotelRoute, {
         headers: {
           Authorization: user.token,
         },
         params: {
-          code: text, // Use the input text for the query parameter
+          code: text,
         },
       });
       console.log(JSON.stringify(data.data));
@@ -36,10 +40,9 @@ export default function Hotel() {
           onChange={(e) => setText(e.target.value)}
         />
       </div>
-      <div className="hotels">
-      {hotel.map((hotel) => {
-        console.log(hotel.name);
-        return (
+      {isS ? (
+        <div className="hotels">
+          {hotel.map((hotel) => (
           <div className="hotel">
             <Card key={hotel.id} className="col-md-4">
               <div className="card-body">
@@ -67,17 +70,21 @@ export default function Hotel() {
               </div>
             </Card>
           </div>
-        );
-      })}
-      </div>
+        ))}
+        </div>
+      ) : (
+        <HotelGifContainer>
+          <img src={HotelGif} alt="Hotel Loading" />
+        </HotelGifContainer>
+      )}
     </Container>
   );
 }
 const Container = styled.div`
   height: 100%;
   width: 100%;
+  overflow: hidden;
   border-right: #ffffff 4px;
-  border-radius: 3rem;
   .search {
     border-radius: 0.5rem;
     background-color: #373842;
@@ -99,6 +106,7 @@ const Container = styled.div`
     }
   }
   .hotels{
+    height: 100%;
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
@@ -144,3 +152,16 @@ const CardTextSpan = styled.span`
     color: #e2e3f2;
   }
 `;
+const HotelGifContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  img{
+    align-self: center;
+    height: 80%;
+    width: 80%;
+  }
+`;
+

@@ -5,9 +5,12 @@ import {
   FaHome as Feed,
   FaSearch as Search,
   FaPaperPlane as DM,
-  FaCog as Settings,
+  FaQuestion as Settings,
 } from "react-icons/fa";
 export default function ProfileButtons({changeMenu,setFeed}) {
+  const openAboutUs = ()=>{
+    window.location.href = 'https://codecommandos-aboutus.netlify.app/'
+  }
   return (
     <Container>
       <div className="home button">
@@ -26,9 +29,9 @@ export default function ProfileButtons({changeMenu,setFeed}) {
         <DM className="icon" size="27"/>
         <h2>Direct</h2>
       </div>
-      <div className="Settings button" onClick={()=>changeMenu("Settings")}>
+      <div className="Settings button" onClick={openAboutUs}>
         <Settings className="icon" size="27"/>
-        <h2>Settings</h2>
+        <h2>About Us</h2>
       </div>
     </Container>
   );
