@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
+import {FaMapMarked as Map} from 'react-icons/fa'
 import DestDetails from "./Feed/DestDetails";
 import { getDestinRoute } from "../utils/api-routes";
 import AddTrip from "./Feed/AddTrip";
@@ -10,6 +11,9 @@ import AboutUs from "./Feed/AboutUs";
 export default function Feed({feed}) {
   const [data, setData] = useState([]);
   const [addShowTrip,setAddShowTrip] = useState("show")
+  const handleMap = ()=>{
+    window.location.href = 'http://codecommandos-mapintegration.netlify.app/'
+  }
   useEffect(() => {
     async function getDest() {
       try {
@@ -35,6 +39,9 @@ export default function Feed({feed}) {
               <DestDetails key={index} eventData={item} />
             ))}
           </DestDetailsContainer>
+          <FloatingActionButton onClick={handleMap}>
+            <Map/>
+          </FloatingActionButton>
         </Container>
       );
 
@@ -91,3 +98,21 @@ const DestDetailsContainer = styled.div`
 `;
 const AddTripContainer = styled.div``;
 const TripDetailsContainer = styled.div``;
+const FloatingActionButton = styled.button`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #61dafb;
+  color: white;
+  padding: 15px;
+  border: none;
+  font-size: 1.5em;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #4e0eff;
+  }
+`;

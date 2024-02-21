@@ -47,7 +47,7 @@ export default function Post({item}) {
               {item.imgs.map((item, index) => {
                 console.log(`http://localhost:5000/data/posts/${item}`);
                 return (
-                <img src={`http://localhost:5000/data/posts/${item}`} alt="" key={index} />
+                <img src={`http://localhost:5000/${item}`} alt="" key={index} />
               )})}
             </Carousel>
           </div>

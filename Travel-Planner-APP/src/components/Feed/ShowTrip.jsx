@@ -22,12 +22,16 @@ export default function ShowTrip({ setAddShowTrip }) {
           },
         });
         const posts = data.map((post) => {
-          if(post.posts && post.posts.length> 0){
-            const array = post.posts.map((item)=>{
-              return {name: post.name,imgs: item.imgs,caption: item.caption}
-            })
+          if (post.posts && post.posts.length > 0) {
+            const array = post.posts.map((item) => {
+              return {
+                name: post.name,
+                imgs: item.imgs,
+                caption: item.caption,
+              };
+            });
             console.log(array);
-            setPosts(array)
+            setPosts(array);
           }
         });
       } catch (error) {
@@ -62,74 +66,22 @@ export default function ShowTrip({ setAddShowTrip }) {
   };
   return (
     <Container>
-      <div className="add"></div>
-      <div className="row">
-        <div className="mytrips">
-          {trips &&
-            trips.map((item) => (
-              <>
-                <div className={`${item ? "trip" : "notrip"}`}>
-                  <div className="tripdetail">
-                    <div className="det">
-                      <h4>{item.departureDate}</h4>
-                      <h4>{item.returnDate}</h4>
-                      <h4>{item.arrivalCity}</h4>
-                      <img src={`http://localhost:5000${item.ticket}`} alt="" />
-                      {item.tripMates.map((item) => (
-                        <h4>{item}</h4>
-                      ))}
-                    </div>
-                    <div className="weather">
-                      <div className="search">
-                        <h4>Get Weather</h4>
-                      </div>
-                      <div className="updates">
-                        {[1, 4].map(() => (
-                          <div class="card">
-                            <div class="card-image">
-                              <img src="whether.jpg" alt="Weather Image" />
-                            </div>
-                            <div class="card-content">
-                              <h2>Weather Details</h2>
-                              <div class="weather-details">
-                                <h3>
-                                  <span>Date:</span>
-                                  <b class="datee"> 20th February 2024</b>
-                                </h3>
-                                <p>Time: 12:00 PM</p>
-                                <p>Temperature: 25°C</p>
-                                <p>Clouds: Partly Cloudy</p>
-                                <p>Pressure: 1013 hPa</p>
-                                <p>Sea Level: 0 m</p>
-                                <p>Ground Level: 0 m</p>
-                                <p>Wind Speed: 10 km/h</p>
-                                <p>Wind Gust: 15 km/h</p>
-                                <p>Wind Degree: 180°</p>
-                                <p>Humidity: 70%</p>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+      <div className="myposts">
+        {add ? (
+          <AddPost setAdd={setAdd} />
+        ) : (
+          <div className="posts">
+            {posts.map((item) => {
+              if (item) {
+                return (
+                  <div className="post">
+                    <Post item={item} />
                   </div>
-                </div>
-              </>
-            ))}
-        </div>
-        <div className="myposts">
-          {add ? (
-            <AddPost setAdd={setAdd} />
-          ) : (
-            <div className="posts">
-              {posts.map((item) => {
-                if (item) {
-                  return <Post item={item} />;
-                }
-              })}
-            </div>
-          )}
-        </div>
+                );
+              }
+            })}
+          </div>
+        )}
       </div>
       <FloatingActionButton3 onClick={handleEmailButtonClick}>
         <Email />
@@ -148,8 +100,8 @@ const Container = styled.div`
   width: 100%;
   .row {
     height: 100%;
-    display: grid;
-    grid-template-columns: 50% 50%;
+    display: flex;
+    flex-direction: column;
     .mytrips {
       height: 100%;
       width: 100%;
@@ -189,16 +141,22 @@ const Container = styled.div`
         }
       }
     }
-    .myposts {
-      height: 100%;
-      width: 100%;
-      overflow: auto;
+  }
+  .myposts {
+    .posts{
+      &::-webkit-scrollbar {
+      width: 0.5rem;
       &-thumb {
         background-color: #ffffff39;
         width: 0.1rem;
         border-radius: 1rem;
       }
     }
+    }
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
   }
 `;
 const FloatingActionButton = styled.button`

@@ -155,7 +155,7 @@ export default function AddPost({setAdd}) {
             <button onClick={handleSubmit}>Post</button>
           </div>
         </div>
-        <FloatingActionButton onClick={()=>setAdd(false)}>+</FloatingActionButton>
+        <FloatingActionButton onClick={()=>setAdd(false)}>X</FloatingActionButton>
       </Container>
       <ToastContainer />
     </>
@@ -170,8 +170,11 @@ const Container = styled.div`
   padding-bottom: 1rem;
   #addpost {
     padding: 0.4rem;
-    height: 100%;
+    height: 100vh;
     width: 100%;
+    display: flex;
+    height: 80%;
+    align-self: center;
     border-radius: 0.5rem;
     background-color: #282a34;
     .post {

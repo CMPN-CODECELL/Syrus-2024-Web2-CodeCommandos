@@ -9,6 +9,7 @@ module.exports.addSugg = async (req, res, next) => {
     try {
       const { data } = await axios.post("http://127.0.0.1:5000", { text: msg });
       const suggestion = Suggestion.create({...body,feedback: data.sentiment})
+      console.log(suggestion);
       return res.json(suggestion)
     } catch (error) {
       console.log(error.message);
