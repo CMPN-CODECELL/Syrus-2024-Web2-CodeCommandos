@@ -10,7 +10,7 @@ import {
   FaShare as Share,
 } from "react-icons/fa";
 import Dialog from "./Dialog";
-export default function Post({addpost,postData}) {
+export default function Post({item}) {
   const [seeMore, setSeeMore] = useState(false);
   const [selectedButton, setSelectedButton] = useState("");
   const arr = [1, 1, 1, 17];
@@ -24,46 +24,9 @@ export default function Post({addpost,postData}) {
           <div className="top">
             <div className="detail" >
               <img src={App} alt="" />
-              <h3>username</h3>
+              <h3>{item.name}</h3>
             </div>
             <div className="side2">
-              <div className="buttons">
-                <div className="like btn">
-                  <Button
-                    onClick={() => {
-                      setSelectedButton("Like");
-                    }}
-                  >
-                    <Like
-                      className="icon"
-                      size="25"
-                      style={{
-                        color: `${selectedButton === "Like" ? "red" : "white"}`,
-                      }}
-                    />
-                  </Button>
-                  <h6 onClick={() => setModalOpen([true, "Likes"])}>196</h6>
-                </div>
-                <div
-                  className="comment btn"
-                  onClick={() => {
-                    setSelectedButton("Comment");
-                    setModalOpen([true, "Comments"]);
-                  }}
-                >
-                  <Button>
-                    <Comment
-                      className="icon"
-                      size="25"
-                      style={{
-                        color: `${
-                          selectedButton === "Comment" ? "red" : "white"
-                        }`,
-                      }}
-                    />
-                  </Button>
-                  <h6>567</h6>
-                </div>
                 <div
                   className="share btn"
                   onClick={() => {
@@ -71,36 +34,24 @@ export default function Post({addpost,postData}) {
                     setModalOpen([true, "Shares"]);
                   }}
                 >
-                  <Button>
-                    <Share
-                      className="icon"
-                      size="25"
-                      style={{
-                        color: `${
-                          selectedButton === "Share" ? "red" : "white"
-                        }`,
-                      }}
-                    />
-                  </Button>
-                  <h6>89</h6>
                 </div>
               </div>
             </div>
           </div>
-          <div className="caption">
-          <p style={{ height: !seeMore ? "1.3em" : "auto", overflow: "hidden" }}>
-              rtdyfgmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmjhyzxg{""}
+          <div className="caption" style={{color: 'white'}}>
+          <p style={{ height: !seeMore ? "1.3em" : "auto", overflow: "hidden" }}>{item.caption}
               </p>
           </div>
           <div className="image">
             <Carousel className="slider">
-              {arr.map((_, index) => (
-                <img src={Logo} alt="" key={index} />
-              ))}
+              {item.imgs.map((item, index) => {
+                console.log(`http://localhost:5000/data/posts/${item}`);
+                return (
+                <img src={`http://localhost:5000/data/posts/${item}`} alt="" key={index} />
+              )})}
             </Carousel>
           </div>
-        </div>
-      </div>
+          </div>
     </Container>
   );
 }

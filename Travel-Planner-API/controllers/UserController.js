@@ -55,19 +55,23 @@ module.exports.getData = async (req,res,next) =>{
 }
 module.exports.getUsers = async (req,res,next) => {
   try {
-    const {user} = req.user
     const users = await User.find({})
-    const names = users.map((item)=>{
-      return{
-        _id : item._id,
-        name: item.name
-      }
-    })
-    const filtered = names.filter((item)=>{
-      return item._id!=user
-    })
-    return res.json(filtered)
+    return res.json(users)
   } catch (e) {
     next(e)
+  }
+}
+module.exports.addPost = async (req,res,next)=>{
+  try {
+    const {caption} = req.body
+    const fileNames = req.files.map((file) => `data/posts/${file.filename}`);
+    console.log(caption,fileNames);
+    const id = req.user.user
+    const user = await User.findOne({_id: id})
+    user.posts.push({caption,imgs: fileNames})
+    await user.save()
+    return res.json({msg: "Post Added"})
+  } catch (error) {
+    console.log(error.message);
   }
 }

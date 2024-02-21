@@ -17,3 +17,4 @@ export const addMsgRoute = `${host}/api/msgs/addmsg`
 export const getMsgRoute = `${host}/api/msgs/getmsgs`
 export const addSuggRoute = `${host}/sugg/addSugg`
 export const getSuggRoute = `${host}/sugg/getSugg`
+export const addPostRoute = `${host}/api/auth/addPost`

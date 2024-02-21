@@ -42,6 +42,10 @@ const userSchema = mongoose.Schema({
     tripRequest : {
         type: [mongoose.Types.ObjectId],
         default: []
+    },
+    posts: {
+        type: [Object],
+        default: []
     }
 })
 

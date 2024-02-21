@@ -1,10 +1,12 @@
-const { register, login, getData,getUsers,updateProfile} = require('../controllers/UserController')
+const { register, login, getData,getUsers,updateProfile, addPost} = require('../controllers/UserController')
 const {verifyToken} = require("../middlewares/UserMiddleware")
 const file = require("../middlewares/ProfileUpload")
+const post = require("../middlewares/PostUpload")
 const router = require('express').Router()
 router.post("/register",register)
 router.post("/login",login)
 router.get("/getData",verifyToken,getData)
 router.post("/updateProfile",verifyToken,file.single('profilePicture'),updateProfile)
 router.get("/getUsers",verifyToken,getUsers)
+router.post("/addPost",verifyToken,post.any(),addPost)
 module.exports = router

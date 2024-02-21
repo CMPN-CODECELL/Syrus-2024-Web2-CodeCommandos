@@ -2,13 +2,40 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { FaVoicemail as Email } from "react-icons/fa";
-import { getTrip } from "../../utils/api-routes";
+import { getTrip, getUsers } from "../../utils/api-routes";
 import { Link } from "react-router-dom";
+import AddPost from "./AddPost";
+import Post from "./Post";
 export default function ShowTrip({ setAddShowTrip }) {
+  const [posts, setPosts] = useState([]);
   const [trips, setTrips] = useState([]);
   const [weather, getWeather] = useState([]);
-
+  const [add, setAdd] = useState(true);
   const user = JSON.parse(localStorage.getItem("user"));
+  useEffect(() => {
+    async function friends() {
+      try {
+        console.log("Fetching friends");
+        const { data } = await axios.get(getUsers, {
+          headers: {
+            Authorization: user.token,
+          },
+        });
+        const posts = data.map((post) => {
+          if(post.posts && post.posts.length> 0){
+            const array = post.posts.map((item)=>{
+              return {name: post.name,imgs: item.imgs,caption: item.caption}
+            })
+            console.log(array);
+            setPosts(array)
+          }
+        });
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+    friends();
+  }, []);
   useEffect(() => {
     async function getTrips() {
       try {
@@ -18,7 +45,6 @@ export default function ShowTrip({ setAddShowTrip }) {
           },
         });
         setTrips(data);
-        console.log(data);
       } catch (error) {
         console.log(error.message);
       }
@@ -36,6 +62,7 @@ export default function ShowTrip({ setAddShowTrip }) {
   };
   return (
     <Container>
+      <div className="add"></div>
       <div className="row">
         <div className="mytrips">
           {trips &&
@@ -57,34 +84,32 @@ export default function ShowTrip({ setAddShowTrip }) {
                         <h4>Get Weather</h4>
                       </div>
                       <div className="updates">
-                      {[1,4].map(() => (
-                        <div class="card">
-                          <div class="card-image">
-                            <img src="whether.jpg" alt="Weather Image" />
-                          </div>
-                          <div class="card-content">
-                            <h2>Weather Details</h2>
-                            <div class="weather-details">
-                              <h3>
-                                <span >
-                                  Date:
-                                </span>
-                                <b class="datee"> 20th February 2024</b>
-                              </h3>
-                              <p>Time: 12:00 PM</p>
-                              <p>Temperature: 25°C</p>
-                              <p>Clouds: Partly Cloudy</p>
-                              <p>Pressure: 1013 hPa</p>
-                              <p>Sea Level: 0 m</p>
-                              <p>Ground Level: 0 m</p>
-                              <p>Wind Speed: 10 km/h</p>
-                              <p>Wind Gust: 15 km/h</p>
-                              <p>Wind Degree: 180°</p>
-                              <p>Humidity: 70%</p>
+                        {[1, 4].map(() => (
+                          <div class="card">
+                            <div class="card-image">
+                              <img src="whether.jpg" alt="Weather Image" />
+                            </div>
+                            <div class="card-content">
+                              <h2>Weather Details</h2>
+                              <div class="weather-details">
+                                <h3>
+                                  <span>Date:</span>
+                                  <b class="datee"> 20th February 2024</b>
+                                </h3>
+                                <p>Time: 12:00 PM</p>
+                                <p>Temperature: 25°C</p>
+                                <p>Clouds: Partly Cloudy</p>
+                                <p>Pressure: 1013 hPa</p>
+                                <p>Sea Level: 0 m</p>
+                                <p>Ground Level: 0 m</p>
+                                <p>Wind Speed: 10 km/h</p>
+                                <p>Wind Gust: 15 km/h</p>
+                                <p>Wind Degree: 180°</p>
+                                <p>Humidity: 70%</p>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -92,7 +117,19 @@ export default function ShowTrip({ setAddShowTrip }) {
               </>
             ))}
         </div>
-        <div className="myposts"></div>
+        <div className="myposts">
+          {add ? (
+            <AddPost setAdd={setAdd} />
+          ) : (
+            <div className="posts">
+              {posts.map((item) => {
+                if (item) {
+                  return <Post item={item} />;
+                }
+              })}
+            </div>
+          )}
+        </div>
       </div>
       <FloatingActionButton3 onClick={handleEmailButtonClick}>
         <Email />
@@ -134,15 +171,15 @@ const Container = styled.div`
             }
           }
           .weather {
+            display: none;
             h4 {
               color: white;
             }
-            .updates{
+            .updates {
               display: flex;
               flex-direction: row;
               flex: 0 0 10%;
-              .card{
-                
+              .card {
               }
             }
           }

@@ -4,11 +4,51 @@ import { FaUpload as Upload } from "react-icons/fa";
 import { useDropzone } from "react-dropzone";
 import { ToastContainer, toast } from "react-toastify";
 import Post from "./Post";
-export default function AddPost() {
+import axios from "axios";
+import { addPostRoute } from "../../utils/api-routes";
+export default function AddPost({setAdd}) {
+  const user = JSON.parse(localStorage.getItem("user"));
   const [postPreview, setPostPreview] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [text, setText] = useState("");
+  const handleSubmit = async () => {
+    try {
+      const formData = new FormData();
+      selectedFiles.forEach((file) => {
+        formData.append("images", file);
+      });
+      formData.append("caption", text);
+
+      console.log("FormData:", formData);
+
+      try {
+        const { data } = await axios.post(addPostRoute, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: user.token,
+          },
+        });
+        console.log(data);
+
+        toast.success(data.msg, toastOptions);
+      } catch (error) {
+        console.log(error.message);
+      }
+      setPostData({
+        mediaUrl: [],
+        caption: "",
+        username: "",
+      });
+      setSelectedFiles([]);
+      setImagePreviews([]);
+      setText("");
+    } catch (error) {
+      console.error("Error submitting post:", error);
+      toast.error("Error submitting post", toastOptions);
+    }
+  };
+
   const [postData, setPostData] = useState({
     mediaUrl: [],
     caption: "",
@@ -59,70 +99,63 @@ export default function AddPost() {
   return (
     <>
       <Container>
-        {!postPreview ? (
-          <div id="addpost">
-            <div className="post">
-              <div {...getRootProps()} className="dropzone">
-                <input {...getInputProps()} />
-                {selectedFiles.length > 0 && (
-                  <div className="image-preview">
-                    <p>Selected Media Preview</p>
-                    <div className="preview">
-                      {selectedFiles.map((file, index) => (
-                        <React.Fragment key={index}>
-                          {file.type.startsWith("image/") ? (
-                            <img
+        <div id="addpost">
+          <div className="post">
+            <div {...getRootProps()} className="dropzone">
+              <input {...getInputProps()} />
+              {selectedFiles.length > 0 && (
+                <div className="image-preview">
+                  <p>Selected Media Preview</p>
+                  <div className="preview">
+                    {selectedFiles.map((file, index) => (
+                      <React.Fragment key={index}>
+                        {file.type.startsWith("image/") ? (
+                          <img
+                            src={URL.createObjectURL(file)}
+                            alt={`preview-${index}`}
+                            className="logo"
+                          />
+                        ) : file.type.startsWith("video/") ? (
+                          <video className="logo" controls>
+                            <source
                               src={URL.createObjectURL(file)}
-                              alt={`preview-${index}`}
-                              className="logo"
+                              type={file.type}
                             />
-                          ) : file.type.startsWith("video/") ? (
-                            <video className="logo" controls>
-                              <source
-                                src={URL.createObjectURL(file)}
-                                type={file.type}
-                              />
-                              Your browser does not support the video tag.
-                            </video>
-                          ) : null}
-                        </React.Fragment>
-                      ))}
-                    </div>
+                            Your browser does not support the video tag.
+                          </video>
+                        ) : null}
+                      </React.Fragment>
+                    ))}
                   </div>
-                )}
-                <p>
-                  <Upload />
-                  {`Upload ${selectedFiles.length > 0 ? "Other" : ""} Media`}
-                </p>
-                {selectedFiles.length > 0 && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedFiles([]);
-                      setImagePreviews([]);
-                    }}
-                  >
-                    Cancel Upload
-                  </button>
-                )}
-              </div>
-              <input
-                type="text"
-                name="caption"
-                placeholder="Enter Your Post Caption"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-              />
-              <button onClick={handlePreview}>View Post Preview</button>
+                </div>
+              )}
+              <p>
+                <Upload />
+                {`Upload ${selectedFiles.length > 0 ? "Other" : ""} Media`}
+              </p>
+              {selectedFiles.length > 0 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedFiles([]);
+                    setImagePreviews([]);
+                  }}
+                >
+                  Cancel Upload
+                </button>
+              )}
             </div>
+            <input
+              type="text"
+              name="caption"
+              placeholder="Enter Your Post Caption"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
+            <button onClick={handleSubmit}>Post</button>
           </div>
-        ) : (
-          <div className="posts">
-            <div className="post2">
-              <Post addpost={true} postData={postData} />
-            </div>
-          </div>
-        )}
+        </div>
+        <FloatingActionButton onClick={()=>setAdd(false)}>+</FloatingActionButton>
       </Container>
       <ToastContainer />
     </>
@@ -246,7 +279,7 @@ const Container = styled.div`
     width: 100%;
     padding-bottom: 1rem;
     align-items: stretch;
-    .post2{
+    .post2 {
       height: 100%;
       background-color: #282a34;
       width: 100%;
@@ -266,5 +299,25 @@ const Container = styled.div`
         }
       }
     }
+  }
+`;
+const FloatingActionButton = styled.button`
+margin: 1rem;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  background-color: #61dafb;
+  color: white;
+  padding: 15px;
+  border: none;
+  font-size: 1.5em;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #4e0eff;
   }
 `;

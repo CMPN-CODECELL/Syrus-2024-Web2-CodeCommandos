@@ -23,7 +23,7 @@ app.use("/get/amadeus", getRoutes);
 app.use("/trip", tripRoutes);
 app.use("/sugg", suggRoutes);
 app.use("/data/tickets", express.static(path.join("data", "tickets")));
-
+app.use("/data/posts", express.static(path.join("data", "posts")));
 mongoose
   .connect("mongodb+srv://extratdh:qwertyuiop@cluster0.te1qmaj.mongodb.net/")
   .then(() => {
